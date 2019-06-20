@@ -1,8 +1,5 @@
-class SessionsView
-  def ask_for_string(attribute)
-    puts "Please enter #{attribute}:"
-    gets.chomp
-  end
+class SessionsView < BaseView
+  undef_method :display, :ask_for_number
 
   def welcome
     puts "You're successfully logged in"

@@ -7,4 +7,16 @@ class Customer
     @name = attributes[:name]
     @address = attributes[:address]
   end
+
+  def to_s
+    "Name: #{name} | Address: #{address}"
+  end
+
+  def to_csv
+    [id, name, address]
+  end
+
+  def self.headers
+    %i[id name address]
+  end
 end

@@ -1,48 +1,54 @@
-require_relative '../views/orders_view'
-
-class OrdersController
+class OrdersController < BaseController
   def initialize(meal_repository, employee_repository, customer_repository, order_repository)
+    super(order_repository)
     @meal_repository = meal_repository
     @employee_repository = employee_repository
     @customer_repository = customer_repository
-    @order_repository = order_repository
     @view = OrdersView.new
   end
 
-  def add
-    # During the exercise the test asked you to find the meal, customer and employee by id.
-    # Here is how you could do the same by asking for index instead.
-    # (Check the OrdersView class.)
-    @view.display_meals(@meal_repository.all)
-    meal_index = @view.ask_for_number(:index) # => returns number/index
-    meal = @meal_repository.all[meal_index]
-
-    @view.display_customers(@customer_repository.all)
-    customer_index = @view.ask_for_number(:index)
-    customer = @customer_repository.all[customer_index]
-
-    @view.display_delivery_guys(@employee_repository.all_delivery_guys)
-    delivery_guy_index = @view.ask_for_number(:index)
-    delivery_guy = @employee_repository.all_delivery_guys[delivery_guy_index]
-
-    order = Order.new(meal: meal, customer: customer, employee: delivery_guy)
-    @order_repository.add(order)
-
-  end
-
   def list_undelivered_orders
-    undelivered_orders = @order_repository.undelivered_orders
-    @view.display(undelivered_orders)
+    undelivered_orders = @repository.undelivered_orders
+    view.display(undelivered_orders)
   end
 
   def list_my_orders(employee)
-    orders = @order_repository.employees_undelivered_orders(employee)
-    @view.display(orders)
+    orders = @repository.employees_undelivered_orders(employee)
+    view.display(orders)
+  end
+
+  def add
+    meal = get_meal
+    customer = get_customer
+    delivery_guy = get_delivery_guy
+
+    order = Order.new(meal: meal, customer: customer, employee: delivery_guy)
+    @repository.add(order)
   end
 
   def mark_as_delivered(employee)
     list_my_orders(employee)
     id = @view.ask_for_number(:id)
-    @order_repository.mark_as_delivered(id)
+    @repository.mark_as_delivered(id)
+  end
+
+  private
+
+  def get_meal
+    view.display(@meal_repository.all)
+    meal_index = @view.ask_for_number(:index)
+    @meal_repository.all[meal_index]
+  end
+
+  def get_customer
+    @view.display(@customer_repository.all)
+    customer_index = @view.ask_for_number(:index)
+    @customer_repository.all[customer_index]
+  end
+
+  def get_delivery_guy
+    @view.display(@employee_repository.all_delivery_guys)
+    delivery_guy_index = @view.ask_for_number(:index)
+    @employee_repository.all_delivery_guys[delivery_guy_index]
   end
 end

@@ -10,10 +10,14 @@ class Employee
   end
 
   def manager?
-    @role == 'manager'
+    role == 'manager'
   end
 
   def delivery_guy?
-    @role == 'delivery_guy'
+    role == 'delivery_guy'
+  end
+
+  def to_s
+    "Username: #{username} | Role: #{role}"
   end
 end
