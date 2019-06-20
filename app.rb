@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative 'router'
 require_relative 'app/repositories/base_repository'
 require_relative 'app/controllers/base_controller'
